@@ -54,3 +54,4 @@ for epoch in range(epochs):
             f"Epoch {epoch + 1}, "
             f"Loss: {loss.item():.4f}"
         )
+
