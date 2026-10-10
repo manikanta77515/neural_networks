@@ -1,48 +1,34 @@
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-data = pd.read_csv("students.csv") 
+# Step 1: Load the dataset
+data = pd.read_csv("students.csv")
 
-# print(data.isnull().sum())
+print("First 5 rows:")
+print(data.head())
 
-## clean the data
+# Step 2: Check missing values
+print("\nMissing values:")
+print(data.isnull().sum())
 
-data["study_hours"] = data["study_hours"].fillna(
-    data["study_hours"].median()
-)
+# Step 3: Remove rows where the correct result is missing
+data = data.dropna(subset=["result"]).copy()
 
-data["attendance"] = data["attendance"].fillna(
-    data["attendance"].median()
-)
+# Step 4: Separate input features (X)
+X = data[
+    [
+        "study_hours",
+        "attendance",
+        "previous_marks",
+        "assignments_completed"
+    ]
+]
 
-data["previous_marks"] = data["previous_marks"].fillna(
-    data["previous_marks"].median()
+# Step 5: Separate the target (y)
+y = data["result"]
 
-)
-data["assignments_completed"] = data["assignments_completed"].fillna(
-    data["assignments_completed"].median()
-
-)
-data["result"] = data["result"].fillna(
-    data["result"].median()
-)
-
-
-#separate the data
-
-X= data[[
-    "study_hours",
-    "attendance",
-    "previous_marks",
-    "assignments_completed"]]
-
-
-y= data[["result"]]
-
-
-## split data into testing and training
-
-
+# Step 6: Split into training and testing data
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
@@ -50,5 +36,24 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42,
     stratify=y
 )
+
+# Step 7: Fill missing input values using training medians
+medians = X_train.median()
+
+X_train = X_train.fillna(medians)
+X_test = X_test.fillna(medians)
+
+# Step 8: Display the results
+print("\nTraining input shape:", X_train.shape)
+print("Testing input shape:", X_test.shape)
+print("Training target shape:", y_train.shape)
+print("Testing target shape:", y_test.shape)
+
+print("\nTraining inputs:")
+print(X_train)
+
+print("\nTraining targets:")
+print(y_train)
+
 
 
